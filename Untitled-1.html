@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forge Corner St.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary: #1E3A8A;         /* Deep Navy Blue */
+      --secondary: #374151;       /* Charcoal Gray */
+      --cta: #10B981;             /* Emerald Green */
+      --cta-hover: #059669;       /* Darker Emerald */
+      --promo: #F59E0B;           /* Bright Orange */
+      --bg: #FFFFFF;              /* Main background */
+      --bg-card: #F3F4F6;         /* Light Gray for cards */
+      --text-main: #374151;       /* Charcoal for main text */
+      --text-secondary: #6B7280;  /* Medium Gray for secondary text */
+      --shadow: 0 4px 24px rgba(30,58,138,0.07);
+      --shadow-hover: 0 8px 32px rgba(30,58,138,0.13);
+      --radius: 18px;
+      --radius-btn: 16px;
+      --transition: 0.18s cubic-bezier(.4,0,.2,1);
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+    /* Header/Navigation */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2.5vw 0.7rem 2.5vw; background: var(--primary); border-bottom: 1px solid #e0e7ef;
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 2px 8px rgba(30,58,138,0.08);
+    }
+    header {
+      background: var(--primary);
+      box-shadow: 0 2px 8px rgba(30,58,138,0.06);
+      padding: 2.5rem 0 1.5rem 0;
+      text-align: center;
+      border-bottom-left-radius: 40px 20px;
+      border-bottom-right-radius: 40px 20px;
+      margin-bottom: 0.5rem;
+    }
+    header h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.6rem;
+      letter-spacing: 2px;
+      color: #fff;
+      margin: 0;
+      font-weight: 700;
+    }
+    header p {
+      color: #c7d2fe;
+      margin-top: 0.7rem;
+      font-size: 1.13rem;
+      letter-spacing: 1px;
+      font-weight: 500;
+    }
+    /* Search Bar */
+    .search-bar {
+      display: flex; align-items: center; gap: 0.7rem;
+      background: #fff; border-radius: var(--radius-btn); padding: 0.5rem 1.2rem;
+      box-shadow: 0 2px 8px rgba(30,58,138,0.04);
+      min-width: 0;
+      flex: 1 1 320px;
+      max-width: 480px;
+    }
+    .search-bar input[type="text"] {
+      border: none; background: transparent; outline: none; font-size: 1.08rem; width: 100%;
+      padding: 0.5rem 0;
+      color: var(--secondary);
+    }
+    .search-bar input[type="text"]::placeholder {
+      color: #b0b9c6;
+      font-size: 1.01rem;
+      font-style: italic;
+      letter-spacing: 0.2px;
+    }
+    .search-bar select {
+      border: none; background: transparent; font-size: 1.02rem; color: var(--secondary);
+      padding: 0.3rem 0.5rem;
+      border-radius: 8px;
+      transition: background 0.2s;
+      cursor: pointer;
+      background: #fff;
+      padding-right: 1.5em;
+      appearance: none;
+      position: relative;
+    }
+    .search-bar select:after {
+      content: '▼';
+      position: absolute;
+      right: 0.7em;
+      pointer-events: none;
+      color: #b0b9c6;
+      font-size: 0.9em;
+    }
+    .cart-icon {
+      position: relative; cursor: pointer; margin-left: 1.5rem; font-size: 1.5rem;
+      display: flex; align-items: center;
+      transition: color var(--transition);
+    }
+    .cart-icon:hover { color: var(--primary);}
+    .cart-icon span {
+      position: absolute; top: -8px; right: -8px; background: #e53e3e; color: #fff; border-radius: 50%; font-size: 0.85rem; padding: 2px 7px;
+      font-weight: 600; box-shadow: 0 2px 8px rgba(60,60,60,0.08);
+    }
+    .cart-dropdown {
+      display: none; position: absolute; right: 0; top: 36px; background: #fff; border-radius: 16px; box-shadow: var(--shadow-hover);
+      min-width: 270px; z-index: 1001; padding: 1.2rem 1rem 1rem 1rem;
+      animation: fadeIn 0.2s;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px);} to {opacity:1; transform:none;} }
+    .cart-icon:hover .cart-dropdown, .cart-dropdown.active {
+      display: block;
+    }
+    .cart-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem; gap: 0.5rem;}
+    .cart-item-title { font-size: 1.01rem; color: var(--secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;}
+    .cart-item-remove { color: #e53e3e; cursor: pointer; font-size: 1.2rem; padding: 0 0.3rem;}
+    .cart-summary { font-weight: 600; margin-top: 1rem; color: var(--primary);}
+    .cart-checkout-btn {
+      margin-top: 1rem; width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 12px; padding: 0.8rem 0; font-size: 1.08rem; font-weight: 600; cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .cart-checkout-btn:hover { background: #205144; }
+    header {
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(30,58,138,0.06);
+      padding: 2.5rem 0 1.5rem 0;
+      text-align: center;
+      border-bottom-left-radius: 40px 20px;
+      border-bottom-right-radius: 40px 20px;
+      margin-bottom: 0.5rem;
+    }
+    header h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.6rem;
+      letter-spacing: 2px;
+      color: var(--secondary);
+      margin: 0;
+      font-weight: 700;
+    }
+    header p {
+      color: #7b8a99;
+      margin-top: 0.7rem;
+      font-size: 1.13rem;
+      letter-spacing: 1px;
+      font-weight: 500;
+    }
+    .breadcrumb {
+      font-size: 1.01rem; color: #7b8a99; margin: 1.2rem 0 0.5rem 0;
+      padding-left: 2.5vw;
+      font-weight: 500;
+    }
+    .breadcrumb span {
+      color: var(--cta);
+      font-weight: 700;
+      background: #e6eef7;
+      padding: 0.1em 0.5em;
+      border-radius: 8px;
+      margin-left: 0.2em;
+    }
+    .main-content-flex { display: flex; gap: 2.5rem; align-items: flex-start; }
+    .sidebar {
+      min-width: 180px; background: var(--bg-card); border-radius: 18px; padding: 2rem 1rem 2rem 1.2rem; margin-right: 2rem; box-shadow: 0 2px 8px rgba(30,58,138,0.04);
+      height: fit-content; position: sticky; top: 90px; max-height: 70vh; overflow-y: auto;
+      transition: box-shadow var(--transition);
+    }
+    .sidebar h3 { font-size: 1.13rem; color: var(--primary); margin-bottom: 1.2rem; font-weight: 700;}
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar li {
+      margin-bottom: 1.1rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 1.07rem;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      transition: background var(--transition), color var(--transition), font-weight 0.2s;
+      font-weight: 500;
+      position: relative;
+    }
+    .sidebar li.active, .sidebar li:hover {
+      color: var(--primary);
+      background: #e0e7ef;
+      font-weight: 700;
+    }
+    .sidebar li.active::before {
+      content: '';
+      position: absolute;
+      left: -8px; top: 50%; transform: translateY(-50%);
+      width: 4px; height: 60%;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem 1.5rem;
+      padding: 2rem 2vw 2rem 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      min-height: 60vh;
+      box-sizing: border-box;
+    }
+    .product-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid #e5e7eb;
+      padding: 1.2rem 1rem 1.1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform var(--transition), box-shadow var(--transition), border var(--transition);
+      position: relative;
+      cursor: pointer;
+      min-height: 260px;
+      margin: 0;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .product-card:hover, .product-card:focus-within {
+      transform: translateY(-4px) scale(1.025);
+      box-shadow: var(--shadow-hover);
+      border: 1.5px solid var(--primary);
+      z-index: 2;
+      background: #fff;
+    }
+    .product-img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #e0e7ef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.7rem;
+      font-size: 2.1rem;
+      box-shadow: 0 2px 8px rgba(30,58,138,0.06);
+      transition: background 0.2s;
+    }
+    .product-card:hover .product-img {
+      background: #f3f4f6;
+    }
+    .wishlist-btn {
+      position: absolute; top: 10px; right: 12px; background: none; border: none; cursor: pointer; font-size: 1.3rem; color: var(--promo); opacity: 0.7; transition: opacity 0.2s;
+      z-index: 3;
+    }
+    .wishlist-btn:hover, .wishlist-btn:focus { opacity: 1; }
+    .product-title {
+      font-size: 1.09rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 0.2rem;
+      text-align: center;
+      letter-spacing: 0.1px;
+      line-height: 1.2;
+      min-height: 2.2em;
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .product-price {
+      font-size: 1.18rem;
+      color: var(--cta);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.2px;
+      text-shadow: 0 1px 0 #e0e7ef;
+    }
+    .product-desc {
+      color: var(--text-secondary);
+      font-size: 0.97rem;
+      text-align: center;
+      margin-bottom: 0.7rem;
+      min-height: 1.8em;
+      font-weight: 500;
+      max-width: 95%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: help;
+    }
+    .product-card:hover .product-desc {
+      white-space: normal;
+      overflow: visible;
+      background: #f3f4f6;
+      border-radius: 8px;
+      padding: 0.2em 0.4em;
+      z-index: 2;
+      position: relative;
+    }
+    .quick-view-btn {
+      display: none;
+      position: absolute;
+      left: 50%; bottom: 1.1rem; transform: translateX(-50%);
+      background: #fff; color: var(--primary); border: 1px solid var(--primary); border-radius: 12px;
+      padding: 0.35rem 1.1rem; font-size: 0.98rem; font-weight: 600; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(30,58,138,0.08);
+      transition: background 0.2s, color 0.2s;
+      z-index: 3;
+    }
+    .product-card:hover .quick-view-btn, .product-card:focus-within .quick-view-btn {
+      display: block;
+    }
+    .quick-view-btn:hover, .quick-view-btn:focus {
+      background: var(--primary); color: #fff;
+    }
+    .buy-btn {
+      background: var(--cta);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-btn);
+      padding: 0.7rem 1.5rem;
+      font-size: 1.08rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(30,58,138,0.08);
+      margin-top: 0.7rem;
+      letter-spacing: 0.5px;
+      outline: none;
+      min-width: 120px;
+    }
+    .buy-btn:hover, .buy-btn:focus {
+      background: var(--cta-hover);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(16,185,129,0.13);
+    }
+    .buy-btn:active {
+      background: #065f46;
+    }
+    /* Modal Styles */
+    #buyModal {
+      position: fixed; z-index: 1000; left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center;
+      animation: fadeIn 0.2s;
+    }
+    .modal-content {
+      background: #fff; border-radius: 18px; padding: 2rem 1.5rem; min-width: 320px; box-shadow: var(--shadow-hover);
+      position: relative; max-width: 95vw;
+      display: flex; flex-direction: column; align-items: stretch;
+    }
+    .close-btn {
+      position: absolute; right: 1rem; top: 1rem; font-size: 1.5rem; cursor: pointer; color: #7b8a99;
+      transition: color 0.2s;
+    }
+    .close-btn:hover { color: #e53e3e; }
+    #buyForm label { display:block; margin-top:1rem; color:var(--secondary); font-weight: 600;}
+    #buyForm input[type="text"], #buyForm input[type="tel"] {
+      width: 100%; padding: 0.7rem; margin-top:0.3rem; border-radius: 8px; border: 1px solid #e0e7ef; font-size:1.05rem;
+      background: #f8fafc; margin-bottom: 0.2rem;
+      transition: border 0.2s;
+    }
+    #buyForm input:focus { border: 1.5px solid var(--accent);}
+    #buyForm button {
+      margin-top: 1.5rem; width: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%);
+      color: var(--secondary); border: none; border-radius: 12px; padding: 0.9rem 0; font-size: 1.08rem; font-weight: 700; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      letter-spacing: 0.5px;
+    }
+    #buyForm button:hover, #buyForm button:focus { background: linear-gradient(90deg, var(--accent2) 0%, var(--accent) 100%); color: var(--primary);}
+    /* Product detail modal */
+    #productDetailModal { display:none; position:fixed; z-index:1100; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.18); align-items:center; justify-content:center; animation: fadeIn 0.2s;}
+    .product-detail-content {
+      background:#fff; border-radius:18px; padding:2rem 1.5rem; min-width:320px; max-width:95vw; box-shadow:var(--shadow-hover); position:relative;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .product-detail-close { position:absolute; right:1rem; top:1rem; font-size:1.5rem; cursor:pointer; color:#7b8a99; transition: color 0.2s;}
+    .product-detail-close:hover { color: #e53e3e;}
+    .product-detail-img { width:120px; height:120px; border-radius:16px; background:#e6eef7; display:flex; align-items:center; justify-content:center; font-size:3rem; margin-bottom:1rem; box-shadow: 0 2px 8px rgba(60,60,60,0.06);}
+    .product-detail-title { font-size:1.3rem; font-weight:700; color:var(--secondary); margin-bottom:0.5rem; }
+    .product-detail-desc { color:#7b8a99; margin-bottom:1rem; text-align: center;}
+    .product-detail-spec { font-size:0.98rem; color:var(--secondary); margin-bottom:1rem; }
+    .product-detail-price { font-size:1.13rem; color:var(--primary); font-weight:700; margin-bottom:1rem; }
+    /* Custom scrollbar for sidebar/products (desktop) */
+    @media (min-width: 900px) {
+      .sidebar::-webkit-scrollbar, .products::-webkit-scrollbar { width: 8px; background: #e6eef7;}
+      .sidebar::-webkit-scrollbar-thumb, .products::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px;}
+    }
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .products {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.2rem 1.2rem;
+        padding: 1.5rem 1vw 1.5rem 0;
+      }
+    }
+    @media (max-width: 900px) {
+      .main-content-flex { flex-direction: column; gap: 0; }
+      .sidebar { padding: 1.2rem 0.7rem;}
+      .products {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem 1rem;
+        padding: 1rem 0.5rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .topbar { flex-direction: column; align-items: stretch; padding: 0.7rem 2vw 0.7rem 2vw;}
+      .search-bar { max-width: 100vw; width: 100%; }
+      .sidebar { padding: 0.7rem 0.2rem; font-size: 1rem;}
+      .products { grid-template-columns: 1fr; gap: 0.8rem; padding: 1rem 0.2rem;}
+      header { padding: 1.2rem 0 0.7rem 0; }
+      .breadcrumb { padding-left: 0.5rem;}
+      .modal-content, .product-detail-content { min-width: 0; padding: 1.2rem 0.5rem;}
+      .buy-btn, .quick-view-btn { font-size: 1rem; padding: 1rem 0; min-width: 100%; }
+      .product-card { padding: 1rem 0.5rem 0.8rem 0.5rem; min-height: 180px;}
+      .product-title { font-size: 1.08rem;}
+      .product-desc { font-size: 0.95rem;}
+    }
+    /* Touch-friendly tap targets */
+    button, .buy-btn, .cart-item-remove, .close-btn, .product-card, .sidebar li {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Remove number input arrows on mobile */
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0;}
+    input[type=number] { -moz-appearance: textfield;}
+  </style>
+  <!-- Optional: Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="topbar">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Cari produk...">
+      <select id="searchCategory">
+        <option value="">Semua Kategori</option>
+        <option value="Hair Care">Hair Care</option>
+        <option value="Cleaning">Cleaning</option>
+        <option value="Air">Air</option>
+        <option value="Water">Water</option>
+        <option value="Other">Other</option>
+      </select>
+      <select id="searchSort">
+        <option value="">Sortir</option>
+        <option value="price-asc">Harga Termurah</option>
+        <option value="price-desc">Harga Termahal</option>
+        <option value="popular">Paling Populer</option>
+      </select>
+    </div>
+    <div class="cart-icon" id="cartIcon">
+      🛒 <span id="cartCount">0</span>
+      <div class="cart-dropdown" id="cartDropdown">
+        <div id="cartItems"></div>
+        <div class="cart-summary" id="cartSummary"></div>
+        <button class="cart-checkout-btn" id="cartCheckoutBtn">Checkout</button>
+      </div>
+    </div>
+  </div>
+  <header>
+    <h1>Forge Corner St.</h1>
+    <p>Perangkat rumah tangga modern, desain minimalis, kualitas premium.</p>
+  </header>
+  <main>
+    <div class="breadcrumb" id="breadcrumb">
+      Home <span>&gt;</span> <span id="breadcrumbCategory">Semua Kategori</span>
+    </div>
+    <div class="main-content-flex">
+      <aside class="sidebar">
+        <h3>Kategori</h3>
+        <ul id="categoryList">
+          <li class="active" data-category="">Semua</li>
+          <li data-category="Hair Care">Hair Care</li>
+          <li data-category="Cleaning">Cleaning</li>
+          <li data-category="Air">Air</li>
+          <li data-category="Water">Water</li>
+          <li data-category="Other">Other</li>
+        </ul>
+      </aside>
+      <section class="products" id="productsSection">
+        <!-- Produk akan di-render oleh JS -->
+      </section>
+    </div>
+  </main>
+  <footer>
+    &copy; 2024 Forge Corner St. | Modern Home Appliances
+  </footer>
+
+  <!-- Modal Interaksi Pembeli -->
+  <div id="buyModal" style="display:none;">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h2>Formulir Pembelian</h2>
+      <form id="buyForm">
+        <label for="buyerName">Nama:</label>
+        <input type="text" id="buyerName" name="buyerName" required>
+        <label for="buyerWA">Nomor WhatsApp:</label>
+        <input type="tel" id="buyerWA" name="buyerWA" required pattern="^08[0-9]{8,}$" placeholder="08xxxxxxxxxx">
+        <input type="hidden" id="productName" name="productName">
+        <button type="submit">Kirim</button>
+      </form>
+      <div id="buySuccess" style="display:none; color:green; margin-top:1rem;">
+        Terima kasih! Kami akan menghubungi Anda segera.
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Detail Modal -->
+  <div id="productDetailModal">
+    <div class="product-detail-content">
+      <span class="product-detail-close" id="closeProductDetail">&times;</span>
+      <div class="product-detail-img" id="detailImg"></div>
+      <div class="product-detail-title" id="detailTitle"></div>
+      <div class="product-detail-desc" id="detailDesc"></div>
+      <div class="product-detail-spec" id="detailSpec"></div>
+      <div class="product-detail-price" id="detailPrice"></div>
+      <button class="buy-btn" id="detailBuyBtn">Beli Sekarang</button>
+    </div>
+  </div>
+
+  <script>
+    // --- Produk Data ---
+    const products = [
+      {
+        emoji: "💨", title: "Hair Dryer", desc: "Pengering rambut dengan teknologi ionik, cepat dan aman untuk semua jenis rambut.",
+        price: 499000, category: "Hair Care", spec: "Daya: 1200W, Ionik, 2 Kecepatan", id: "hairdryer"
+      },
+      {
+        emoji: "🧹", title: "Vacuum Cleaner", desc: "Penyedot debu ringan, daya hisap kuat, cocok untuk rumah modern.",
+        price: 1299000, category: "Cleaning", spec: "Daya: 400W, Filter HEPA, Kabel 5m", id: "vacuum"
+      },
+      {
+        emoji: "🌬️", title: "Air Purifier", desc: "Pembersih udara dengan filter HEPA, menjaga udara tetap segar dan sehat.",
+        price: 1599000, category: "Air", spec: "HEPA, CADR 200m³/h, Area 30m²", id: "airpurifier"
+      },
+      {
+        emoji: "💧", title: "Dehumidifier", desc: "Pengurang kelembapan, mencegah jamur dan menjaga kenyamanan ruangan.",
+        price: 1799000, category: "Air", spec: "Kapasitas: 1.5L, Otomatis, Low Noise", id: "dehumidifier"
+      },
+      {
+        emoji: "🧼", title: "Electric Mop", desc: "Pel listrik otomatis, membersihkan lantai tanpa repot dan hemat waktu.",
+        price: 899000, category: "Cleaning", spec: "Baterai: 2000mAh, 2 Mode, Ringan", id: "mop"
+      },
+      {
+        emoji: "🚿", title: "Water Heater", desc: "Pemanas air instan, hemat energi dan mudah dipasang di kamar mandi Anda.",
+        price: 1499000, category: "Water", spec: "Daya: 350W, Instan, Aman", id: "heater"
+      },
+      {
+        emoji: "🪮", title: "Catokan", desc: "Catokan rambut keramik, hasil halus dan tahan lama tanpa merusak rambut.",
+        price: 399000, category: "Hair Care", spec: "Keramik, 180°C, 30W", id: "catokan"
+      }
+    ];
+    // --- Shopping Cart State ---
+    let cart = [];
+    // --- Render Produk ---
+    function renderProducts(filter = {}) {
+      let filtered = products.filter(p => {
+        let match = true;
+        if (filter.category && p.category !== filter.category) match = false;
+        if (filter.search && !p.title.toLowerCase().includes(filter.search.toLowerCase())) match = false;
+        return match;
+      });
+      if (filter.sort === "price-asc") filtered.sort((a,b)=>a.price-b.price);
+      if (filter.sort === "price-desc") filtered.sort((a,b)=>b.price-a.price);
+      // ...popularity sort can be added...
+      let html = "";
+      if (filtered.length === 0) html = "<div style='grid-column:1/-1;text-align:center;color:#7b8a99;'>Produk tidak ditemukan.</div>";
+      filtered.forEach(p => {
+        html += `<div class="product-card" data-id="${p.id}" tabindex="0">
+          <button class="wishlist-btn" title="Tambah ke Wishlist" tabindex="-1">♡</button>
+          <div class="product-img">${p.emoji}</div>
+          <div class="product-title" title="${p.title}">${p.title}</div>
+          <div class="product-price">Rp ${p.price.toLocaleString()}</div>
+          <div class="product-desc" title="${p.desc}">${p.desc.length > 45 ? p.desc.slice(0,45) + '...' : p.desc}</div>
+          <button class="buy-btn">Beli Sekarang</button>
+          <button class="quick-view-btn">Quick View</button>
+        </div>`;
+      });
+      document.getElementById('productsSection').innerHTML = html;
+      // Card click for detail
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.onclick = function(e) {
+          if (e.target.classList.contains('buy-btn') || e.target.classList.contains('wishlist-btn') || e.target.classList.contains('quick-view-btn')) return;
+          let pid = card.getAttribute('data-id');
+          showProductDetail(pid);
+        };
+        card.querySelector('.buy-btn').onclick = function(e) {
+          let pid = card.getAttribute('data-id');
+          addToCart(pid);
+        };
+        card.querySelector('.quick-view-btn').onclick = function(e) {
+          let pid = card.parentElement.getAttribute('data-id');
+          showProductDetail(pid);
+        };
+      });
+      // Wishlist dummy
+      document.querySelectorAll('.wishlist-btn').forEach(btn => {
+        btn.onclick = function(e) {
+          e.stopPropagation();
+          btn.textContent = btn.textContent === "♡" ? "♥" : "♡";
+        };
+      });
+    }
+    // --- Kategori Sidebar ---
+    document.querySelectorAll('#categoryList li').forEach(li => {
+      li.onclick = function() {
+        document.querySelectorAll('#categoryList li').forEach(x=>x.classList.remove('active'));
+        li.classList.add('active');
+        let cat = li.getAttribute('data-category');
+        document.getElementById('breadcrumbCategory').textContent = cat || "Semua Kategori";
+        renderProducts({category:cat, search:document.getElementById('searchInput').value, sort:document.getElementById('searchSort').value});
+      };
+    });
+    // --- Search & Sort ---
+    document.getElementById('searchInput').oninput = function() {
+      let cat = document.querySelector('#categoryList li.active').getAttribute('data-category');
+      renderProducts({category:cat, search:this.value, sort:document.getElementById('searchSort').value});
+    };
+    document.getElementById('searchCategory').onchange = function() {
+      let cat = this.value;
+      document.querySelectorAll('#categoryList li').forEach(x=>{
+        x.classList.toggle('active', x.getAttribute('data-category')===cat);
+      });
+      document.getElementById('breadcrumbCategory').textContent = cat || "Semua Kategori";
+      renderProducts({category:cat, search:document.getElementById('searchInput').value, sort:document.getElementById('searchSort').value});
+    };
+    document.getElementById('searchSort').onchange = function() {
+      let cat = document.querySelector('#categoryList li.active').getAttribute('data-category');
+      renderProducts({category:cat, search:document.getElementById('searchInput').value, sort:this.value});
+    };
+    // --- Breadcrumb update handled above ---
+    // --- Product Detail Modal ---
+    function showProductDetail(pid) {
+      let p = products.find(x=>x.id===pid);
+      if (!p) return;
+      document.getElementById('detailImg').textContent = p.emoji;
+      document.getElementById('detailTitle').textContent = p.title;
+      document.getElementById('detailDesc').textContent = p.desc;
+      document.getElementById('detailSpec').textContent = "Spesifikasi: " + p.spec;
+      document.getElementById('detailPrice').textContent = "Rp " + p.price.toLocaleString();
+      document.getElementById('productDetailModal').style.display = 'flex';
+      document.getElementById('detailBuyBtn').onclick = function() {
+        addToCart(pid);
+        document.getElementById('productDetailModal').style.display = 'none';
+      };
+    }
+    document.getElementById('closeProductDetail').onclick = function() {
+      document.getElementById('productDetailModal').style.display = 'none';
+    };
+    document.getElementById('productDetailModal').onclick = function(e) {
+      if(e.target === this) this.style.display = 'none';
+    };
+    // --- Cart Logic ---
+    function addToCart(pid) {
+      let idx = cart.findIndex(x=>x.id===pid);
+      if (idx>-1) cart[idx].qty++;
+      else cart.push({id:pid, qty:1});
+      updateCartUI();
+      // Animate cart icon
+      let cartIcon = document.getElementById('cartIcon');
+      cartIcon.classList.remove('animated');
+      void cartIcon.offsetWidth; // force reflow
+      cartIcon.classList.add('animated');
+    }
+    function removeFromCart(pid) {
+      cart = cart.filter(x=>x.id!==pid);
+      updateCartUI();
+    }
+    function updateCartUI() {
+      let count = cart.reduce((a,b)=>a+b.qty,0);
+      document.getElementById('cartCount').textContent = count;
+      let html = "";
+      let total = 0;
+      cart.forEach(item=>{
+        let p = products.find(x=>x.id===item.id);
+        if (!p) return;
+        html += `<div class="cart-item">
+          <span class="cart-item-title">${p.title} x${item.qty}</span>
+          <span class="cart-item-remove" data-id="${item.id}">&times;</span>
+        </div>`;
+        total += p.price * item.qty;
+      });
+      document.getElementById('cartItems').innerHTML = html || "<div style='color:#7b8a99;'>Keranjang kosong.</div>";
+      document.getElementById('cartSummary').textContent = total ? "Total: Rp " + total.toLocaleString() : "";
+      document.querySelectorAll('.cart-item-remove').forEach(btn=>{
+        btn.onclick = function() {
+          removeFromCart(btn.getAttribute('data-id'));
+        };
+      });
+    }
+    document.getElementById('cartIcon').onclick = function(e) {
+      let dd = document.getElementById('cartDropdown');
+      dd.classList.toggle('active');
+      e.stopPropagation();
+    };
+    document.body.onclick = function() {
+      document.getElementById('cartDropdown').classList.remove('active');
+    };
+    document.getElementById('cartDropdown').onclick = function(e) {
+      e.stopPropagation();
+    };
+    document.getElementById('cartCheckoutBtn').onclick = function() {
+      if (cart.length === 0) return alert("Keranjang kosong.");
+      // Checkout: tampilkan modal pembelian
+      document.getElementById('buyModal').style.display = 'flex';
+      document.getElementById('buyForm').style.display = '';
+      document.getElementById('buySuccess').style.display = 'none';
+      // Isi nama produk di form (jika hanya 1 produk)
+      if (cart.length === 1) {
+        let p = products.find(x=>x.id===cart[0].id);
+        document.getElementById('productName').value = p ? p.title : "";
+      } else {
+        document.getElementById('productName').value = "Multi Produk";
+      }
+    };
+    // --- Render awal ---
+    renderProducts();
+    updateCartUI();
+    // --- Modal Beli logic (perlu update agar tidak double event) ---
+    document.getElementById('buyForm').onsubmit = function(e) {
+      e.preventDefault();
+      var name = document.getElementById('buyerName').value.trim();
+      var wa = document.getElementById('buyerWA').value.trim();
+      if(name && wa.match(/^08[0-9]{8,}$/)) {
+        document.getElementById('buyForm').style.display = 'none';
+        document.getElementById('buySuccess').style.display = '';
+        cart = [];
+        updateCartUI();
+      }
+    };
+    document.getElementById('closeModal').onclick = function() {
+      document.getElementById('buyModal').style.display = 'none';
+    };
+    document.getElementById('buyModal').onclick = function(e) {
+      if(e.target === this) this.style.display = 'none';
+    };
+  </script>
+</body>
+</html>
