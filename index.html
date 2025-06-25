@@ -379,18 +379,193 @@
     }
     #buyForm button:hover, #buyForm button:focus { background: linear-gradient(90deg, var(--accent2) 0%, var(--accent) 100%); color: var(--primary);}
     /* Product detail modal */
-    #productDetailModal { display:none; position:fixed; z-index:1100; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.18); align-items:center; justify-content:center; animation: fadeIn 0.2s;}
-    .product-detail-content {
-      background:#fff; border-radius:18px; padding:2rem 1.5rem; min-width:320px; max-width:95vw; box-shadow:var(--shadow-hover); position:relative;
-      display: flex; flex-direction: column; align-items: center;
+    #productDetailModal {
+      display: none;
+      position: fixed;
+      z-index: 1100;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.18);
+      align-items: center; justify-content: center;
+      animation: fadeIn 0.2s;
     }
-    .product-detail-close { position:absolute; right:1rem; top:1rem; font-size:1.5rem; cursor:pointer; color:#7b8a99; transition: color 0.2s;}
-    .product-detail-close:hover { color: #e53e3e;}
-    .product-detail-img { width:120px; height:120px; border-radius:16px; background:#e6eef7; display:flex; align-items:center; justify-content:center; font-size:3rem; margin-bottom:1rem; box-shadow: 0 2px 8px rgba(60,60,60,0.06);}
-    .product-detail-title { font-size:1.3rem; font-weight:700; color:var(--secondary); margin-bottom:0.5rem; }
-    .product-detail-desc { color:#7b8a99; margin-bottom:1rem; text-align: center;}
-    .product-detail-spec { font-size:0.98rem; color:var(--secondary); margin-bottom:1rem; }
-    .product-detail-price { font-size:1.13rem; color:var(--primary); font-weight:700; margin-bottom:1rem; }
+    .product-detail-content {
+      background: #fff;
+      border-radius: 18px;
+      padding: 2rem 1.5rem;
+      min-width: 320px;
+      max-width: 95vw;
+      box-shadow: var(--shadow-hover);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.2s;
+      width: 95vw;
+      max-width: 420px;
+    }
+    .product-detail-close {
+      position: absolute; right: 1rem; top: 1rem;
+      font-size: 1.5rem; cursor: pointer; color: #7b8a99;
+      transition: color 0.2s;
+      z-index: 2;
+    }
+    .product-detail-close:hover { color: #e53e3e; }
+    .product-detail-img-lg {
+      width: 120px; height: 120px;
+      border-radius: 18px;
+      background: #e6eef7;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+      margin-bottom: 1.1rem;
+      box-shadow: 0 2px 8px rgba(60,60,60,0.06);
+      overflow: hidden;
+    }
+    .product-detail-img-lg img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 18px;
+    }
+    .product-detail-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 0.2rem;
+      text-align: center;
+    }
+    .product-detail-price {
+      font-size: 1.18rem;
+      color: var(--cta);
+      font-weight: 800;
+      margin-bottom: 0.7rem;
+      letter-spacing: 0.2px;
+      text-shadow: 0 1px 0 #e6eef7;
+      text-align: center;
+    }
+    .product-detail-tabs {
+      display: flex;
+      width: 100%;
+      margin-bottom: 1.1rem;
+      border-bottom: 1.5px solid #e0e7ef;
+      gap: 0.5rem;
+    }
+    .product-detail-tab {
+      flex: 1 1 0;
+      text-align: center;
+      padding: 0.6rem 0.2rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--secondary);
+      background: none;
+      border: none;
+      border-bottom: 2.5px solid transparent;
+      cursor: pointer;
+      transition: color 0.18s, border 0.18s;
+      outline: none;
+    }
+    .product-detail-tab.active {
+      color: var(--primary);
+      border-bottom: 2.5px solid var(--primary);
+      background: #f3f4f6;
+      border-radius: 8px 8px 0 0;
+    }
+    .product-detail-tab-content {
+      width: 100%;
+      min-height: 60px;
+      margin-bottom: 1.2rem;
+      color: var(--text-secondary);
+      font-size: 1.04rem;
+      animation: fadeIn 0.2s;
+    }
+    .product-detail-specs-list {
+      margin: 0.5em 0 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--text-secondary);
+      font-size: 1.04rem;
+    }
+    .product-detail-specs-list li {
+      margin-bottom: 0.4em;
+      padding-left: 1.2em;
+      position: relative;
+    }
+    .product-detail-specs-list li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-size: 1.1em;
+    }
+    .product-detail-reviews {
+      margin-top: 0.2em;
+    }
+    .product-detail-review-item {
+      margin-bottom: 0.8em;
+      border-bottom: 1px solid #e0e7ef;
+      padding-bottom: 0.5em;
+    }
+    .product-detail-review-item:last-child {
+      border-bottom: none;
+    }
+    .product-detail-review-name {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 1.01em;
+    }
+    .product-detail-review-stars {
+      color: #F59E0B;
+      font-size: 1em;
+      margin-left: 0.3em;
+    }
+    .product-detail-review-comment {
+      color: var(--text-secondary);
+      font-size: 0.98em;
+      margin-top: 0.1em;
+      display: block;
+    }
+    .product-detail-actions {
+      display: flex;
+      gap: 1rem;
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 0.2em;
+    }
+    .product-detail-actions .buy-btn,
+    .product-detail-actions .add-cart-btn {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0.7rem 0.5rem;
+      font-size: 1.08rem;
+      font-weight: 700;
+      border-radius: var(--radius-btn);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(30,58,138,0.08);
+      outline: none;
+    }
+    .product-detail-actions .buy-btn {
+      background: var(--cta);
+      color: #fff;
+    }
+    .product-detail-actions .buy-btn:hover, .product-detail-actions .buy-btn:focus {
+      background: var(--cta-hover);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(16,185,129,0.13);
+    }
+    .product-detail-actions .add-cart-btn {
+      background: #f3f4f6;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+    .product-detail-actions .add-cart-btn:hover, .product-detail-actions .add-cart-btn:focus {
+      background: var(--primary);
+      color: #fff;
+    }
+    @media (max-width: 600px) {
+      .product-detail-content { padding: 1.2rem 0.5rem; min-width: 0; }
+      .product-detail-img-lg { width: 80px; height: 80px; font-size: 2.5rem; }
+      .product-detail-title { font-size: 1.09rem; }
+      .product-detail-price { font-size: 1.05rem; }
+      .product-detail-tab { font-size: 0.98rem; }
+    }
     /* Custom scrollbar for sidebar/products (desktop) */
     @media (min-width: 900px) {
       .sidebar::-webkit-scrollbar, .products::-webkit-scrollbar { width: 8px; background: #e6eef7;}
@@ -524,16 +699,20 @@
   <div id="productDetailModal">
     <div class="product-detail-content">
       <span class="product-detail-close" id="closeProductDetail">&times;</span>
-      <div class="product-detail-img" id="detailImg"></div>
+      <div class="product-detail-img-lg" id="detailImgLg"></div>
       <div class="product-detail-title" id="detailTitle"></div>
       <div class="product-detail-price" id="detailPrice"></div>
-      <div class="product-rating" id="detailRating"></div>
-      <div class="product-detail-desc" id="detailDesc"></div>
-      <div class="product-detail-spec" id="detailSpec"></div>
-      <button class="buy-btn" id="detailBuyBtn">Beli Sekarang</button>
-      <div id="detailReviews" style="width:100%;margin-top:1.5em;">
-        <h4 style="color:var(--primary);margin-bottom:0.5em;">Ulasan Pembeli</h4>
-        <div id="reviewsList"></div>
+      <div class="product-detail-tabs">
+        <button class="product-detail-tab active" data-tab="overview" id="tabOverview">Overview</button>
+        <button class="product-detail-tab" data-tab="spec" id="tabSpec">Spesifikasi</button>
+        <button class="product-detail-tab" data-tab="reviews" id="tabReviews">Reviews</button>
+      </div>
+      <div class="product-detail-tab-content" id="tabContentOverview"></div>
+      <div class="product-detail-tab-content" id="tabContentSpec" style="display:none"></div>
+      <div class="product-detail-tab-content" id="tabContentReviews" style="display:none"></div>
+      <div class="product-detail-actions">
+        <button class="add-cart-btn" id="detailAddCartBtn">Add to Cart</button>
+        <button class="buy-btn" id="detailBuyBtn">Beli Sekarang</button>
       </div>
     </div>
   </div>
@@ -786,29 +965,110 @@
       renderProducts({category:cat, search:document.getElementById('searchInput').value, sort:this.value});
     };
     // --- Breadcrumb update handled above ---
-    // --- Product Detail Modal ---
+    // --- Product Detail Modal with Tabs ---
+    // Product spesifikasi detail
+    const productSpecs = {
+      "philips-hairdryer": [
+        "Daya 1800W",
+        "3 pengaturan panas",
+        "Teknologi ionic",
+        "Berat 500g",
+        "Garansi 2 tahun"
+      ],
+      "electrolux-vacuum": [
+        "Daya 1200W",
+        "Kapasitas 2L",
+        "Filter HEPA",
+        "Berat 3kg",
+        "Panjang kabel 5m"
+      ],
+      "sharp-airpurifier": [
+        "Coverage 30m²",
+        "Filter HEPA",
+        "3 level kecepatan",
+        "Noise <35dB",
+        "Konsumsi 45W"
+      ],
+      "xiaomi-dehumidifier": [
+        "Kapasitas 20L/hari",
+        "Coverage 40m²",
+        "Auto shut-off",
+        "Tangki 3L"
+      ]
+      // ...tambahkan id produk lain jika ingin custom spesifikasi...
+    };
     function showProductDetail(pid) {
       let p = products.find(x=>x.id===pid);
       if (!p) return;
+      // Gambar besar
       let imgHtml = p.img
-        ? `<img src="${p.img}" alt="${p.title}" style="width:100px;height:100px;border-radius:16px;object-fit:cover;">`
-        : p.emoji;
-      document.getElementById('detailImg').innerHTML = imgHtml;
+        ? `<img src="${p.img}" alt="${p.title}">`
+        : `<span>${p.emoji}</span>`;
+      document.getElementById('detailImgLg').innerHTML = imgHtml;
       document.getElementById('detailTitle').textContent = p.title;
       document.getElementById('detailPrice').textContent = "Rp " + p.price.toLocaleString();
-      document.getElementById('detailRating').innerHTML = renderStars(p.rating) + ` <span class="review-count">(${p.reviews.length})</span>`;
-      document.getElementById('detailDesc').textContent = p.desc;
-      document.getElementById('detailSpec').textContent = "Spesifikasi: " + p.spec;
-      // Render reviews
-      let reviewsHtml = p.reviews.length
-        ? p.reviews.map(r=>`<div style="margin-bottom:0.7em;"><b>${r.name}</b> <span style="color:#F59E0B">${renderStars(r.rate)}</span><br><span style="color:var(--text-secondary);font-size:0.97em">${r.comment}</span></div>`).join('')
-        : '<div style="color:var(--text-secondary);font-size:0.97em">Belum ada ulasan.</div>';
-      document.getElementById('reviewsList').innerHTML = reviewsHtml;
-      document.getElementById('productDetailModal').style.display = 'flex';
-      document.getElementById('detailBuyBtn').onclick = function() {
+
+      // Overview tab
+      document.getElementById('tabContentOverview').innerHTML =
+        `<div style="color:var(--text-secondary);font-size:1.04rem;">${p.desc}</div>`;
+
+      // Spesifikasi tab
+      let specs = productSpecs[pid] || (p.spec ? [p.spec] : []);
+      document.getElementById('tabContentSpec').innerHTML =
+        specs.length
+          ? `<ul class="product-detail-specs-list">${specs.map(s=>`<li>${s}</li>`).join('')}</ul>`
+          : `<div style="color:var(--text-secondary);font-size:1.04rem;">Tidak ada spesifikasi detail.</div>`;
+
+      // Reviews tab
+      let reviewsHtml = p.reviews && p.reviews.length
+        ? p.reviews.map(r=>`
+          <div class="product-detail-review-item">
+            <span class="product-detail-review-name">${r.name}</span>
+            <span class="product-detail-review-stars">${renderStars(r.rate)}</span>
+            <span class="product-detail-review-comment">${r.comment}</span>
+          </div>
+        `).join('')
+        : `<div style="color:var(--text-secondary);font-size:1.04rem;">Belum ada ulasan.</div>`;
+      document.getElementById('tabContentReviews').innerHTML = `<div class="product-detail-reviews">${reviewsHtml}</div>`;
+
+      // Tab logic
+      function activateTab(tab) {
+        document.getElementById('tabOverview').classList.remove('active');
+        document.getElementById('tabSpec').classList.remove('active');
+        document.getElementById('tabReviews').classList.remove('active');
+        document.getElementById('tabContentOverview').style.display = 'none';
+        document.getElementById('tabContentSpec').style.display = 'none';
+        document.getElementById('tabContentReviews').style.display = 'none';
+        if(tab==="overview") {
+          document.getElementById('tabOverview').classList.add('active');
+          document.getElementById('tabContentOverview').style.display = '';
+        } else if(tab==="spec") {
+          document.getElementById('tabSpec').classList.add('active');
+          document.getElementById('tabContentSpec').style.display = '';
+        } else if(tab==="reviews") {
+          document.getElementById('tabReviews').classList.add('active');
+          document.getElementById('tabContentReviews').style.display = '';
+        }
+      }
+      document.getElementById('tabOverview').onclick = ()=>activateTab("overview");
+      document.getElementById('tabSpec').onclick = ()=>activateTab("spec");
+      document.getElementById('tabReviews').onclick = ()=>activateTab("reviews");
+      activateTab("overview");
+
+      // Actions
+      document.getElementById('detailAddCartBtn').onclick = function() {
         addToCart(pid);
         document.getElementById('productDetailModal').style.display = 'none';
       };
+      document.getElementById('detailBuyBtn').onclick = function() {
+        addToCart(pid);
+        document.getElementById('productDetailModal').style.display = 'none';
+        // Modal checkout tetap jalan seperti biasa
+        document.getElementById('cartCheckoutBtn').click();
+      };
+
+      // Show modal
+      document.getElementById('productDetailModal').style.display = 'flex';
     }
     document.getElementById('closeProductDetail').onclick = function() {
       document.getElementById('productDetailModal').style.display = 'none';
@@ -816,90 +1076,60 @@
     document.getElementById('productDetailModal').onclick = function(e) {
       if(e.target === this) this.style.display = 'none';
     };
-    // --- Cart Logic ---
-    function addToCart(pid) {
-      let idx = cart.findIndex(x=>x.id===pid);
-      if (idx>-1) cart[idx].qty++;
-      else cart.push({id:pid, qty:1});
-      updateCartUI();
-      // Animate cart icon
-      let cartIcon = document.getElementById('cartIcon');
-      cartIcon.classList.remove('animated');
-      void cartIcon.offsetWidth; // force reflow
-      cartIcon.classList.add('animated');
-    }
-    function removeFromCart(pid) {
-      cart = cart.filter(x=>x.id!==pid);
-      updateCartUI();
-    }
-    function updateCartUI() {
-      let count = cart.reduce((a,b)=>a+b.qty,0);
-      document.getElementById('cartCount').textContent = count;
-      let html = "";
-      let total = 0;
-      cart.forEach(item=>{
-        let p = products.find(x=>x.id===item.id);
-        if (!p) return;
-        html += `<div class="cart-item">
-          <span class="cart-item-title">${p.title} x${item.qty}</span>
-          <span class="cart-item-remove" data-id="${item.id}">&times;</span>
-        </div>`;
-        total += p.price * item.qty;
+    // --- Card click event (replace old showProductDetail) ---
+    // ...existing code...
+    // --- Render Produk ---
+    function renderProducts(filter = {}) {
+      let filtered = products.filter(p => {
+        let match = true;
+        if (filter.category && p.category !== filter.category) match = false;
+        if (filter.search && !p.title.toLowerCase().includes(filter.search.toLowerCase())) match = false;
+        return match;
       });
-      document.getElementById('cartItems').innerHTML = html || "<div style='color:#7b8a99;'>Keranjang kosong.</div>";
-      document.getElementById('cartSummary').textContent = total ? "Total: Rp " + total.toLocaleString() : "";
-      document.querySelectorAll('.cart-item-remove').forEach(btn=>{
-        btn.onclick = function() {
-          removeFromCart(btn.getAttribute('data-id'));
+      if (filter.sort === "price-asc") filtered.sort((a,b)=>a.price-b.price);
+      if (filter.sort === "price-desc") filtered.sort((a,b)=>b.price-a.price);
+      // ...popularity sort can be added...
+      let html = "";
+      if (filtered.length === 0) html = "<div style='grid-column:1/-1;text-align:center;color:#7b8a99;'>Produk tidak ditemukan.</div>";
+      filtered.forEach(p => {
+        html += `<div class="product-card" data-id="${p.id}" tabindex="0">
+          <button class="wishlist-btn" title="Tambah ke Wishlist" tabindex="-1">♡</button>
+          ${
+            p.img
+              ? `<div class="product-img-actual"><img src="${p.img}" alt="${p.title}" loading="lazy"></div>`
+              : `<div class="product-img">${p.emoji}</div>`
+          }
+          <div class="product-title" title="${p.title}">${p.title}</div>
+          <div class="product-price">Rp ${p.price.toLocaleString()}</div>
+          <div class="product-rating">${renderStars(p.rating)} <span class="review-count">(${p.reviews.length})</span></div>
+          <div class="product-desc" title="${p.desc}">${p.desc.length > 45 ? p.desc.slice(0,45) + '...' : p.desc}</div>
+          <button class="buy-btn">Beli Sekarang</button>
+        </div>`;
+      });
+      document.getElementById('productsSection').innerHTML = html;
+      // Card click for detail
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.onclick = function(e) {
+          if (e.target.classList.contains('buy-btn') || e.target.classList.contains('wishlist-btn')) return;
+          let pid = card.getAttribute('data-id');
+          showProductDetail(pid);
+        };
+        card.querySelector('.buy-btn').onclick = function(e) {
+          let pid = card.getAttribute('data-id');
+          addToCart(pid);
+          // Modal checkout tetap jalan seperti biasa
+          document.getElementById('cartCheckoutBtn').click();
+        };
+      });
+      // Wishlist dummy
+      document.querySelectorAll('.wishlist-btn').forEach(btn => {
+        btn.onclick = function(e) {
+          e.stopPropagation();
+          btn.textContent = btn.textContent === "♡" ? "♥" : "♡";
         };
       });
     }
-    document.getElementById('cartIcon').onclick = function(e) {
-      let dd = document.getElementById('cartDropdown');
-      dd.classList.toggle('active');
-      e.stopPropagation();
-    };
-    document.body.onclick = function() {
-      document.getElementById('cartDropdown').classList.remove('active');
-    };
-    document.getElementById('cartDropdown').onclick = function(e) {
-      e.stopPropagation();
-    };
-    document.getElementById('cartCheckoutBtn').onclick = function() {
-      if (cart.length === 0) return alert("Keranjang kosong.");
-      // Checkout: tampilkan modal pembelian
-      document.getElementById('buyModal').style.display = 'flex';
-      document.getElementById('buyForm').style.display = '';
-      document.getElementById('buySuccess').style.display = 'none';
-      // Isi nama produk di form (jika hanya 1 produk)
-      if (cart.length === 1) {
-        let p = products.find(x=>x.id===cart[0].id);
-        document.getElementById('productName').value = p ? p.title : "";
-      } else {
-        document.getElementById('productName').value = "Multi Produk";
-      }
-    };
-    // --- Render awal ---
-    renderProducts();
-    updateCartUI();
-    // --- Modal Beli logic (perlu update agar tidak double event) ---
-    document.getElementById('buyForm').onsubmit = function(e) {
-      e.preventDefault();
-      var name = document.getElementById('buyerName').value.trim();
-      var wa = document.getElementById('buyerWA').value.trim();
-      if(name && wa.match(/^08[0-9]{8,}$/)) {
-        document.getElementById('buyForm').style.display = 'none';
-        document.getElementById('buySuccess').style.display = '';
-        cart = [];
-        updateCartUI();
-      }
-    };
-    document.getElementById('closeModal').onclick = function() {
-      document.getElementById('buyModal').style.display = 'none';
-    };
-    document.getElementById('buyModal').onclick = function(e) {
-      if(e.target === this) this.style.display = 'none';
-    };
+    // ...existing code...
   </script>
 </body>
 </html>
