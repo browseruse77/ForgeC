@@ -209,6 +209,8 @@
       width: 100%;
       min-height: 60vh;
       box-sizing: border-box;
+      /* fix overlap */
+      align-items: stretch;
     }
     .product-card {
       background: var(--bg-card);
@@ -222,19 +224,15 @@
       transition: transform var(--transition), box-shadow var(--transition), border var(--transition);
       position: relative;
       cursor: pointer;
-      min-height: 260px;
+      min-height: 320px;
       margin: 0;
       outline: none;
       box-sizing: border-box;
+      /* fix overlap */
+      height: 100%;
+      justify-content: flex-start;
     }
-    .product-card:hover, .product-card:focus-within {
-      transform: translateY(-4px) scale(1.025);
-      box-shadow: var(--shadow-hover);
-      border: 1.5px solid var(--primary);
-      z-index: 2;
-      background: #fff;
-    }
-    .product-img {
+    .product-img, .product-img-actual {
       width: 70px;
       height: 70px;
       border-radius: 50%;
@@ -246,9 +244,15 @@
       font-size: 2.1rem;
       box-shadow: 0 2px 8px rgba(30,58,138,0.06);
       transition: background 0.2s;
+      object-fit: cover;
+      overflow: hidden;
     }
-    .product-card:hover .product-img {
-      background: #f3f4f6;
+    .product-img-actual img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
     }
     .wishlist-btn {
       position: absolute; top: 10px; right: 12px; background: none; border: none; cursor: pointer; font-size: 1.3rem; color: var(--promo); opacity: 0.7; transition: opacity 0.2s;
@@ -277,6 +281,21 @@
       letter-spacing: 0.2px;
       text-shadow: 0 1px 0 #e0e7ef;
     }
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.2em;
+      font-size: 1.02rem;
+      margin-bottom: 0.4em;
+      color: #F59E0B;
+      font-weight: 600;
+    }
+    .product-rating .review-count {
+      color: var(--text-secondary);
+      font-size: 0.97rem;
+      margin-left: 0.3em;
+      font-weight: 400;
+    }
     .product-desc {
       color: var(--text-secondary);
       font-size: 0.97rem;
@@ -301,19 +320,9 @@
     }
     .quick-view-btn {
       display: none;
-      position: absolute;
-      left: 50%; bottom: 1.1rem; transform: translateX(-50%);
-      background: #fff; color: var(--primary); border: 1px solid var(--primary); border-radius: 12px;
-      padding: 0.35rem 1.1rem; font-size: 0.98rem; font-weight: 600; cursor: pointer;
-      box-shadow: 0 2px 8px rgba(30,58,138,0.08);
-      transition: background 0.2s, color 0.2s;
-      z-index: 3;
     }
     .product-card:hover .quick-view-btn, .product-card:focus-within .quick-view-btn {
-      display: block;
-    }
-    .quick-view-btn:hover, .quick-view-btn:focus {
-      background: var(--primary); color: #fff;
+      display: none;
     }
     .buy-btn {
       background: var(--cta);
@@ -497,6 +506,12 @@
         <label for="buyerWA">Nomor WhatsApp:</label>
         <input type="tel" id="buyerWA" name="buyerWA" required pattern="^08[0-9]{8,}$" placeholder="08xxxxxxxxxx">
         <input type="hidden" id="productName" name="productName">
+        <div class="payment-methods">
+          <label><input type="radio" name="payment" value="credit" required> Kartu Kredit/Debit</label>
+          <label><input type="radio" name="payment" value="ewallet"> E-Wallet (OVO, GoPay, DANA, ShopeePay)</label>
+          <label><input type="radio" name="payment" value="bank"> Transfer Bank</label>
+          <label><input type="radio" name="payment" value="cod"> Bayar di Tempat (COD)</label>
+        </div>
         <button type="submit">Kirim</button>
       </form>
       <div id="buySuccess" style="display:none; color:green; margin-top:1rem;">
@@ -511,10 +526,15 @@
       <span class="product-detail-close" id="closeProductDetail">&times;</span>
       <div class="product-detail-img" id="detailImg"></div>
       <div class="product-detail-title" id="detailTitle"></div>
+      <div class="product-detail-price" id="detailPrice"></div>
+      <div class="product-rating" id="detailRating"></div>
       <div class="product-detail-desc" id="detailDesc"></div>
       <div class="product-detail-spec" id="detailSpec"></div>
-      <div class="product-detail-price" id="detailPrice"></div>
       <button class="buy-btn" id="detailBuyBtn">Beli Sekarang</button>
+      <div id="detailReviews" style="width:100%;margin-top:1.5em;">
+        <h4 style="color:var(--primary);margin-bottom:0.5em;">Ulasan Pembeli</h4>
+        <div id="reviewsList"></div>
+      </div>
     </div>
   </div>
 
@@ -522,32 +542,159 @@
     // --- Produk Data ---
     const products = [
       {
-        emoji: "💨", title: "Hair Dryer", desc: "Pengering rambut dengan teknologi ionik, cepat dan aman untuk semua jenis rambut.",
-        price: 499000, category: "Hair Care", spec: "Daya: 1200W, Ionik, 2 Kecepatan", id: "hairdryer"
+        emoji: "💨",
+        img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
+        title: "Hair Dryer Philips HP8232",
+        desc: "Pengering rambut ionik, 2200W, 6 pengaturan kecepatan & panas, ThermoProtect.",
+        price: 499000,
+        category: "Hair Care",
+        spec: "2200W, Ionik, ThermoProtect, 6 pengaturan",
+        id: "philips-hairdryer",
+        rating: 4.8,
+        reviews: [
+          {name:"Rina",rate:5,comment:"Cepat kering, rambut tetap lembut."},
+          {name:"Dewi",rate:5,comment:"Ringan dan tidak berisik."}
+        ]
       },
       {
-        emoji: "🧹", title: "Vacuum Cleaner", desc: "Penyedot debu ringan, daya hisap kuat, cocok untuk rumah modern.",
-        price: 1299000, category: "Cleaning", spec: "Daya: 400W, Filter HEPA, Kabel 5m", id: "vacuum"
+        emoji: "🪮",
+        img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+        title: "Catokan Rambut Nova 2in1",
+        desc: "Catokan lurus & curly, pelat keramik, suhu hingga 200°C.",
+        price: 135000,
+        category: "Hair Care",
+        spec: "2in1, Keramik, 200°C, 35W",
+        id: "nova-catokan",
+        rating: 4.6,
+        reviews: [
+          {name:"Maya",rate:5,comment:"Rambut jadi halus dan mudah diatur."}
+        ]
       },
       {
-        emoji: "🌬️", title: "Air Purifier", desc: "Pembersih udara dengan filter HEPA, menjaga udara tetap segar dan sehat.",
-        price: 1599000, category: "Air", spec: "HEPA, CADR 200m³/h, Area 30m²", id: "airpurifier"
+        emoji: "🧴",
+        img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+        title: "TRESemmé Keratin Smooth Shampoo 340ml",
+        desc: "Shampoo untuk rambut halus & mudah diatur, mengandung keratin & argan oil.",
+        price: 48000,
+        category: "Hair Care",
+        spec: "340ml, Keratin, Argan Oil",
+        id: "tresemme-shampoo",
+        rating: 4.7,
+        reviews: [
+          {name:"Sari",rate:5,comment:"Rambut jadi lembut dan wangi."}
+        ]
       },
       {
-        emoji: "💧", title: "Dehumidifier", desc: "Pengurang kelembapan, mencegah jamur dan menjaga kenyamanan ruangan.",
-        price: 1799000, category: "Air", spec: "Kapasitas: 1.5L, Otomatis, Low Noise", id: "dehumidifier"
+        emoji: "🧹",
+        img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+        title: "Vacuum Cleaner Electrolux EC41",
+        desc: "Penyedot debu tanpa kantong, daya hisap kuat, filter HEPA.",
+        price: 1599000,
+        category: "Cleaning",
+        spec: "Tanpa kantong, HEPA, 1800W",
+        id: "electrolux-vacuum",
+        rating: 4.7,
+        reviews: [
+          {name:"Andi",rate:5,comment:"Daya hisap kuat, mudah dibersihkan."}
+        ]
       },
       {
-        emoji: "🧼", title: "Electric Mop", desc: "Pel listrik otomatis, membersihkan lantai tanpa repot dan hemat waktu.",
-        price: 899000, category: "Cleaning", spec: "Baterai: 2000mAh, 2 Mode, Ringan", id: "mop"
+        emoji: "🧼",
+        img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+        title: "Electric Mop Deerma TB900",
+        desc: "Pel listrik otomatis, baterai tahan lama, ringan dan praktis.",
+        price: 799000,
+        category: "Cleaning",
+        spec: "Baterai 2200mAh, 2 mode, ringan",
+        id: "deerma-mop",
+        rating: 4.5,
+        reviews: [
+          {name:"Rudi",rate:5,comment:"Lantai bersih tanpa capek, mudah digunakan."}
+        ]
       },
       {
-        emoji: "🚿", title: "Water Heater", desc: "Pemanas air instan, hemat energi dan mudah dipasang di kamar mandi Anda.",
-        price: 1499000, category: "Water", spec: "Daya: 350W, Instan, Aman", id: "heater"
+        emoji: "🧽",
+        img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+        title: "Scotch-Brite Heavy Duty Sponge",
+        desc: "Spons cuci piring, kuat dan tahan lama, membersihkan noda membandel.",
+        price: 15000,
+        category: "Cleaning",
+        spec: "2 pcs, Heavy Duty, Anti Bau",
+        id: "scotchbrite-sponge",
+        rating: 4.8,
+        reviews: [
+          {name:"Lina",rate:5,comment:"Spons awet, piring cepat bersih."}
+        ]
       },
       {
-        emoji: "🪮", title: "Catokan", desc: "Catokan rambut keramik, hasil halus dan tahan lama tanpa merusak rambut.",
-        price: 399000, category: "Hair Care", spec: "Keramik, 180°C, 30W", id: "catokan"
+        emoji: "🌬️",
+        img: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
+        title: "Air Purifier Sharp FP-J30Y",
+        desc: "Pembersih udara dengan Plasmacluster, cocok untuk kamar & ruang keluarga.",
+        price: 1499000,
+        category: "Air",
+        spec: "Plasmacluster, HEPA, 23m²",
+        id: "sharp-airpurifier",
+        rating: 4.8,
+        reviews: [
+          {name:"Budi",rate:5,comment:"Udara jadi segar, alergi berkurang."}
+        ]
+      },
+      {
+        emoji: "💧",
+        img: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=400&q=80",
+        title: "Dehumidifier Xiaomi Smart",
+        desc: "Pengurang kelembapan otomatis, kapasitas 12L/hari, smart app control.",
+        price: 1999000,
+        category: "Air",
+        spec: "12L/hari, Smart App, Otomatis",
+        id: "xiaomi-dehumidifier",
+        rating: 4.6,
+        reviews: [
+          {name:"Lina",rate:5,comment:"Ruangan tidak lembab, jamur hilang."}
+        ]
+      },
+      {
+        emoji: "🌀",
+        img: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=400&q=80",
+        title: "Kipas Angin Miyako KAS-1627 KB",
+        desc: "Kipas angin meja, 3 kecepatan, hemat listrik, diameter 16 inci.",
+        price: 235000,
+        category: "Air",
+        spec: "16 inci, 3 speed, 45W",
+        id: "miyako-fan",
+        rating: 4.5,
+        reviews: [
+          {name:"Rudi",rate:5,comment:"Angin kencang, suara halus."}
+        ]
+      },
+      {
+        emoji: "🚿",
+        img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+        title: "Water Heater Ariston Andris2",
+        desc: "Pemanas air listrik, kapasitas 15L, hemat energi, mudah dipasang.",
+        price: 1699000,
+        category: "Water",
+        spec: "15L, 350W, Safety, Hemat Energi",
+        id: "ariston-waterheater",
+        rating: 4.7,
+        reviews: [
+          {name:"Tono",rate:5,comment:"Air panas cepat, pemasangan mudah."}
+        ]
+      },
+      {
+        emoji: "💦",
+        img: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
+        title: "Dispenser Miyako WD-190 H",
+        desc: "Dispenser galon bawah, panas & dingin, hemat listrik.",
+        price: 499000,
+        category: "Water",
+        spec: "Galon bawah, Hot & Cold, 190W",
+        id: "miyako-dispenser",
+        rating: 4.6,
+        reviews: [
+          {name:"Sari",rate:5,comment:"Praktis, air panas & dingin cepat."}
+        ]
       }
     ];
     // --- Shopping Cart State ---
@@ -568,29 +715,29 @@
       filtered.forEach(p => {
         html += `<div class="product-card" data-id="${p.id}" tabindex="0">
           <button class="wishlist-btn" title="Tambah ke Wishlist" tabindex="-1">♡</button>
-          <div class="product-img">${p.emoji}</div>
+          ${
+            p.img
+              ? `<div class="product-img-actual"><img src="${p.img}" alt="${p.title}" loading="lazy"></div>`
+              : `<div class="product-img">${p.emoji}</div>`
+          }
           <div class="product-title" title="${p.title}">${p.title}</div>
           <div class="product-price">Rp ${p.price.toLocaleString()}</div>
+          <div class="product-rating">${renderStars(p.rating)} <span class="review-count">(${p.reviews.length})</span></div>
           <div class="product-desc" title="${p.desc}">${p.desc.length > 45 ? p.desc.slice(0,45) + '...' : p.desc}</div>
           <button class="buy-btn">Beli Sekarang</button>
-          <button class="quick-view-btn">Quick View</button>
         </div>`;
       });
       document.getElementById('productsSection').innerHTML = html;
       // Card click for detail
       document.querySelectorAll('.product-card').forEach(card => {
         card.onclick = function(e) {
-          if (e.target.classList.contains('buy-btn') || e.target.classList.contains('wishlist-btn') || e.target.classList.contains('quick-view-btn')) return;
+          if (e.target.classList.contains('buy-btn') || e.target.classList.contains('wishlist-btn')) return;
           let pid = card.getAttribute('data-id');
           showProductDetail(pid);
         };
         card.querySelector('.buy-btn').onclick = function(e) {
           let pid = card.getAttribute('data-id');
           addToCart(pid);
-        };
-        card.querySelector('.quick-view-btn').onclick = function(e) {
-          let pid = card.parentElement.getAttribute('data-id');
-          showProductDetail(pid);
         };
       });
       // Wishlist dummy
@@ -600,6 +747,16 @@
           btn.textContent = btn.textContent === "♡" ? "♥" : "♡";
         };
       });
+    }
+    function renderStars(rating) {
+      let full = Math.floor(rating);
+      let half = rating % 1 >= 0.5 ? 1 : 0;
+      let empty = 5 - full - half;
+      let html = '';
+      for(let i=0;i<full;i++) html += '★';
+      if(half) html += '☆';
+      for(let i=0;i<empty;i++) html += '☆';
+      return html;
     }
     // --- Kategori Sidebar ---
     document.querySelectorAll('#categoryList li').forEach(li => {
@@ -633,11 +790,20 @@
     function showProductDetail(pid) {
       let p = products.find(x=>x.id===pid);
       if (!p) return;
-      document.getElementById('detailImg').textContent = p.emoji;
+      let imgHtml = p.img
+        ? `<img src="${p.img}" alt="${p.title}" style="width:100px;height:100px;border-radius:16px;object-fit:cover;">`
+        : p.emoji;
+      document.getElementById('detailImg').innerHTML = imgHtml;
       document.getElementById('detailTitle').textContent = p.title;
+      document.getElementById('detailPrice').textContent = "Rp " + p.price.toLocaleString();
+      document.getElementById('detailRating').innerHTML = renderStars(p.rating) + ` <span class="review-count">(${p.reviews.length})</span>`;
       document.getElementById('detailDesc').textContent = p.desc;
       document.getElementById('detailSpec').textContent = "Spesifikasi: " + p.spec;
-      document.getElementById('detailPrice').textContent = "Rp " + p.price.toLocaleString();
+      // Render reviews
+      let reviewsHtml = p.reviews.length
+        ? p.reviews.map(r=>`<div style="margin-bottom:0.7em;"><b>${r.name}</b> <span style="color:#F59E0B">${renderStars(r.rate)}</span><br><span style="color:var(--text-secondary);font-size:0.97em">${r.comment}</span></div>`).join('')
+        : '<div style="color:var(--text-secondary);font-size:0.97em">Belum ada ulasan.</div>';
+      document.getElementById('reviewsList').innerHTML = reviewsHtml;
       document.getElementById('productDetailModal').style.display = 'flex';
       document.getElementById('detailBuyBtn').onclick = function() {
         addToCart(pid);
